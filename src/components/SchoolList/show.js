@@ -46,17 +46,17 @@ export default class Show extends Component {
 	show(mode) {
 		switch (mode) {
 			case 'degrees':
-				if (this.state.degrees === 0) {
+				if (this.state.degrees === 0 && this.state.nonHE === 0) {
 					return toastr.info(
-						'This school does not have any degrees.'
+						'This school does not have any degrees and Non-HE.'
 					);
 				}
 				this.setState({ mode: 'degrees' });
 				break;
 			case 'courses':
-				if (this.state.courses === 0) {
+				if (this.state.courses === 0 && this.state.nonHE === 0) {
 					return toastr.info(
-						'This school does not have any courses.'
+						'This school does not have any courses and Non-HE.'
 					);
 				}
 				this.setState({ mode: 'courses' });
@@ -85,6 +85,38 @@ export default class Show extends Component {
 				console.log(error);
 				toastr.error('Unable to delete school.');
 			});
+	}
+
+	educationHandler() {
+		return (id) => {
+			const education = this.state.target.Education.find(
+				(e) => e.id === id
+			);
+			const schools = state.get('schools') || [];
+			const school = schools.find(
+				(school) => school.id === this.state.target.id
+			);
+			Axios.delete(`/education/${education.id}`)
+				.then(() => {
+					school.Education.splice(
+						school.Education.indexOf(education),
+						1
+					);
+					const target = this.state.target;
+					target.Education.splice(
+						target.Education.indexOf(education),
+						1
+					);
+					this.setState({ target });
+					schools.splice(schools.indexOf(school), 1, school);
+					state.set('schools', schools);
+					toastr.success('Non-HE deleted successfully.');
+				})
+				.catch((error) => {
+					console.log(error);
+					toastr.error('Unable to delete Non-HE');
+				});
+		};
 	}
 
 	render() {
@@ -151,7 +183,7 @@ export default class Show extends Component {
 											</div>
 											<div className="text-center mb-2">
 												<Link
-													className="btn btn-sm btn-warning text-right"
+													className="btn btn-sm btn-info text-right"
 													to={`/schools/${this.state.target.id}/degrees/add`}
 												>
 													Add Degree
@@ -218,8 +250,11 @@ export default class Show extends Component {
 														{
 															type,
 															tuition,
-															date,
+															date_of_examination,
 															description,
+															id,
+															SchoolId,
+															UserId,
 														},
 														index
 													) => (
@@ -227,10 +262,16 @@ export default class Show extends Component {
 															key={index}
 															type={type}
 															tuition={tuition}
-															date={date}
+															date={
+																date_of_examination
+															}
 															description={
 																description
 															}
+															id={id}
+															SchoolId={SchoolId}
+															UserId={UserId}
+															emitDelete={this.educationHandler()}
 														/>
 													)
 												)}

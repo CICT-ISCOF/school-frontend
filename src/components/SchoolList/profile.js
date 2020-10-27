@@ -33,7 +33,6 @@ export default class Profile extends Component {
 			curricular_program,
 			mission,
 			vision,
-			id,
 		} = this.props.profile;
 		const emitDelete = this.props.emitDelete;
 		return (

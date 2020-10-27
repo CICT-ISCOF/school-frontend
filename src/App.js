@@ -8,6 +8,7 @@ import SchoolList from './components/SchoolList';
 import SchoolShow from './components/SchoolList/show';
 import SchoolForm from './components/SchoolList/form';
 import DegreeForm from './components/Degree/form';
+import NonHEForm from './components/NonHE/form';
 import FZF from './components/404';
 import Axios from 'axios';
 import state from './state';
@@ -45,6 +46,16 @@ export default class App extends Component {
 						exact
 						path="/schools/:id/degrees/:degreeId/edit"
 						component={DegreeForm}
+					/>
+					<Route
+						exact
+						path="/schools/:id/non-he/add"
+						component={NonHEForm}
+					/>
+					<Route
+						exact
+						path="/schools/:id/non-he/:nonHEId/edit"
+						component={NonHEForm}
 					/>
 					<Route path="/schools" component={SchoolList} />
 					<Route path="/register" component={Register} />
