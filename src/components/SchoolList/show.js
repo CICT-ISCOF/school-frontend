@@ -8,6 +8,8 @@ import Course from './course';
 import Degree from './degree';
 import Profile from './profile';
 import Header from './header';
+import Axios from 'axios';
+import { Link } from 'react-router-dom';
 
 export default class Show extends Component {
 	constructor(props) {
@@ -31,6 +33,8 @@ export default class Show extends Component {
 		);
 
 		this.state = {
+			user: state.get('user'),
+			logged: state.has('user'),
 			mode: 'profile',
 			target,
 			degrees: target.Degrees.length,
@@ -61,6 +65,26 @@ export default class Show extends Component {
 				this.setState({ mode: 'profile' });
 				break;
 		}
+	}
+
+	deleteHandler() {
+		Axios.delete(`/schools/${this.state.target.id}`)
+			.then(() => {
+				const schools = state.get('schools') || [];
+				const school = schools.find(
+					(school) => school.id === this.state.target.id
+				);
+				if (school) {
+					const index = schools.indexOf(school);
+					schools.splice(index, 1);
+				}
+				toastr.success('School deleted successfully.');
+				this.props.history.goBack();
+			})
+			.catch((error) => {
+				console.log(error);
+				toastr.error('Unable to delete school.');
+			});
 	}
 
 	render() {
@@ -104,8 +128,50 @@ export default class Show extends Component {
 											nonHE: this.state.nonHE,
 										}}
 									/>
+									{this.state.logged &&
+									(this.state.user.type === 'Admin' ||
+										Number(this.state.user.id) ===
+											Number(this.state.target.id)) ? (
+										<div>
+											<div className="text-center mt-5 mb-2">
+												<Link
+													className="btn btn-sm btn-warning text-right"
+													to={`/schools/${this.state.target.id}/edit`}
+												>
+													Edit School
+												</Link>
+												<button
+													type="button"
+													className="btn btn-danger btn-sm text-left"
+													data-toggle="modal"
+													data-target="#deleteModal"
+												>
+													Delete School
+												</button>
+											</div>
+											<div className="text-center mb-2">
+												<Link
+													className="btn btn-sm btn-warning text-right"
+													to={`/schools/${this.state.target.id}/degrees/add`}
+												>
+													Add Degree
+												</Link>
+												<Link
+													className="btn btn-sm btn-default text-left"
+													to={`/schools/${this.state.target.id}/non-he/add`}
+												>
+													Add Non-HE
+												</Link>
+											</div>
+										</div>
+									) : null}
 									{this.state.mode === 'profile' ? (
-										<Profile profile={this.state.target} />
+										<Profile
+											profile={this.state.target}
+											emitDelete={this.deleteHandler.bind(
+												this
+											)}
+										/>
 									) : null}
 									{this.state.mode === 'degrees' ? (
 										<div className="row mb-4 mt-5">
@@ -114,6 +180,13 @@ export default class Show extends Component {
 													<Degree
 														key={index}
 														degree={degree}
+														OwnerId={
+															this.state.target
+																.UserId
+														}
+														SchoolId={
+															this.state.target.id
+														}
 													/>
 												)
 											)}

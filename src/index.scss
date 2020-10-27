@@ -4,6 +4,10 @@
 	border-radius: 8px;
 }
 
+.modal-backdrop {
+	z-index: 4;
+}
+
 @-webkit-keyframes spinning /* Safari and Chrome */ {
 	from {
 		-webkit-transform: rotate(0deg);

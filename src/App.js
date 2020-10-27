@@ -7,6 +7,7 @@ import Register from './components/Register';
 import SchoolList from './components/SchoolList';
 import SchoolShow from './components/SchoolList/show';
 import SchoolForm from './components/SchoolList/form';
+import DegreeForm from './components/Degree/form';
 import FZF from './components/404';
 import Axios from 'axios';
 import state from './state';
@@ -28,9 +29,23 @@ export default class App extends Component {
 				<Switch>
 					<Route exact path="/" component={Home} />
 					<Route path="/login" component={Login} />
-					<Route path="/schools/add" component={SchoolForm} />
-					<Route path="/schools/:id/edit" component={SchoolForm} />
-					<Route path="/schools/:id" component={SchoolShow} />
+					<Route exact path="/schools/add" component={SchoolForm} />
+					<Route
+						exact
+						path="/schools/:id/edit"
+						component={SchoolForm}
+					/>
+					<Route exact path="/schools/:id" component={SchoolShow} />
+					<Route
+						exact
+						path="/schools/:id/degrees/add"
+						component={DegreeForm}
+					/>
+					<Route
+						exact
+						path="/schools/:id/degrees/:degreeId/edit"
+						component={DegreeForm}
+					/>
 					<Route path="/schools" component={SchoolList} />
 					<Route path="/register" component={Register} />
 					<Route component={FZF} />
