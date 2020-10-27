@@ -37,10 +37,12 @@ export default class Login extends Component {
 			state.setAll(data);
 			state.set('user', user);
 			state.set('token', token);
+			this.setState({ processing: false });
 			return this.props.history.push({
 				pathname: '/schools',
 			});
 		} catch (error) {
+			this.setState({ processing: false });
 			if (error.response && error.response.status === 422) {
 				error.response.data.errors.forEach((error) => {
 					toastr.error(error.msg, error.param);
@@ -49,8 +51,6 @@ export default class Login extends Component {
 			}
 			console.log('toJSON' in error ? error.toJSON() : error);
 			toastr.error('Unable to sign in.');
-		} finally {
-			this.setState({ processing: false });
 		}
 	}
 

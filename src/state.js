@@ -124,7 +124,7 @@ export class State {
 			this._listeners[key] = [];
 		}
 
-		return this._listeners[key].push(callback);
+		return this._listeners[key].push(callback) - 1;
 	}
 
 	/**

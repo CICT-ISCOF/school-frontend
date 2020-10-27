@@ -14,15 +14,13 @@ export default class Card extends Component {
 	}
 
 	componentDidMount() {
-		this.key = state.listen('user', this.saveUser);
+		this.key = state.listen('user', (user) => {
+			this.setState({ logged: state.has('user'), user });
+		});
 	}
 
 	componentWillUnmount() {
 		state.removeListener('user', this.key);
-	}
-
-	saveUser(user = null) {
-		this.setState({ user, logged: state.has('user') });
 	}
 
 	render() {
