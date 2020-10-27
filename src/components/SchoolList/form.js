@@ -108,7 +108,7 @@ export default class Form extends Component {
 	}
 
 	handleSubmit() {
-		return (async (e) => {
+		return async (e) => {
 			e.preventDefault();
 			this.setState({ processing: true });
 			const formData = new FormData(e.target);
@@ -141,7 +141,7 @@ export default class Form extends Component {
 			} finally {
 				this.setState({ processing: false });
 			}
-		}).bind(this);
+		};
 	}
 
 	render() {

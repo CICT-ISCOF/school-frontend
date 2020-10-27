@@ -48,9 +48,64 @@ export default class Profile extends Component {
 						>
 							Edit
 						</Link>
-						<button className="btn btn-sm btn-danger">
+						<button
+							type="button"
+							className="btn btn-sm btn-danger"
+							data-toggle="modal"
+							data-target={`#delete${id}`}
+						>
 							Delete
 						</button>
+						<div
+							class="modal fade"
+							id={`delete${id}`}
+							tabindex="-1"
+							role="dialog"
+							aria-labelledby={`delete${id}Label`}
+							aria-hidden="true"
+							style={{ zIndex: 9999 }}
+						>
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5
+											class="modal-title"
+											id={`delete${id}Label`}
+										>
+											Delete {name}
+										</h5>
+										<button
+											type="button"
+											class="close"
+											data-dismiss="modal"
+											aria-label="Close"
+										>
+											<span aria-hidden="true">
+												&times;
+											</span>
+										</button>
+									</div>
+									<div class="modal-body">
+										Are you sure you want to delete {name}?
+									</div>
+									<div class="modal-footer">
+										<button
+											type="button"
+											class="btn btn-danger btn-sm"
+										>
+											Delete
+										</button>
+										<button
+											type="button"
+											class="btn btn-secondary btn-sm"
+											data-dismiss="modal"
+										>
+											Close
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				) : null}
 				<div

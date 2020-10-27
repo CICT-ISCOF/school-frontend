@@ -21,7 +21,7 @@ export default class Card extends Component {
 		state.removeListener('user', this.key);
 	}
 
-	saveUser(user) {
+	saveUser(user = null) {
 		this.setState({ user, logged: state.has('user') });
 	}
 

@@ -11,7 +11,7 @@ import FZF from './components/404';
 import Axios from 'axios';
 import state from './state';
 
-Axios.defaults.baseURL = 'http://localhost:8000/api';
+Axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
 Axios.defaults.headers.common['Accept'] = 'application/json';
 Axios.defaults.headers.common['Authorization'] = `Bearer ${state.get('token')}`;
 state.listen('token', (token) => {

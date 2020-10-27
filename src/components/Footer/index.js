@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 export default class Footer extends Component {
 	render() {
 		return (
-			<footer className="footer">
+			<footer className="footer fixed-bottom">
 				<div className="container">
 					<div className="row align-items-center justify-content-md-between">
 						<div className="col-md-6">
