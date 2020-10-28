@@ -12,6 +12,9 @@ import Axios from 'axios';
 import { Link } from 'react-router-dom';
 
 export default class Show extends Component {
+	key = -1;
+	modeKey = -1;
+
 	constructor(props) {
 		super(props);
 		const {
@@ -29,13 +32,16 @@ export default class Show extends Component {
 
 		let courseCount = 0;
 		target.Degrees.forEach((degree) =>
-			degree.Courses.forEach((course) => courseCount++)
+			degree.Courses.forEach(() => courseCount++)
 		);
 
 		this.state = {
+			id,
 			user: state.get('user'),
 			logged: state.has('user'),
-			mode: 'profile',
+			mode: state.has(`school-show-mode-${id}`)
+				? state.get(`school-show-mode-${id}`)
+				: 'profile',
 			target,
 			degrees: target.Degrees.length,
 			courses: courseCount,
@@ -43,28 +49,68 @@ export default class Show extends Component {
 		};
 	}
 
+	componentDidMount() {
+		const id = this.state.target.id;
+		this.key = state.listen('schools', (schools) => {
+			const target = schools.find((school) => school.id === id);
+			if (!target) {
+				this.props.history.goBack();
+				return;
+			}
+			let courseCount = 0;
+			target.Degrees.forEach((degree) =>
+				degree.Courses.forEach(() => courseCount++)
+			);
+			this.setState({
+				target,
+				degrees: target.Degrees.length,
+				courses: courseCount,
+				nonHE: target.Education.length,
+			});
+		});
+
+		this.modeKey = state.listen(
+			`school-show-mode-${this.state.id}`,
+			(mode) => {
+				switch (mode) {
+					case 'degrees':
+						if (
+							this.state.degrees === 0 &&
+							this.state.nonHE === 0
+						) {
+							return toastr.info(
+								'This school does not have any degrees and Non-HE.'
+							);
+						}
+						this.setState({ mode: 'degrees' });
+						break;
+					case 'courses':
+						if (
+							this.state.courses === 0 &&
+							this.state.nonHE === 0
+						) {
+							return toastr.info(
+								'This school does not have any courses and Non-HE.'
+							);
+						}
+						this.setState({ mode: 'courses' });
+						break;
+					default:
+						this.setState({ mode: 'profile' });
+						break;
+				}
+			}
+		);
+	}
+
+	componentWillUnmount() {
+		state
+			.removeListener('schools', this.key)
+			.removeListener(`school-show-mode-${this.state.id}`, this.modeKey);
+	}
+
 	show(mode) {
-		switch (mode) {
-			case 'degrees':
-				if (this.state.degrees === 0 && this.state.nonHE === 0) {
-					return toastr.info(
-						'This school does not have any degrees and Non-HE.'
-					);
-				}
-				this.setState({ mode: 'degrees' });
-				break;
-			case 'courses':
-				if (this.state.courses === 0 && this.state.nonHE === 0) {
-					return toastr.info(
-						'This school does not have any courses and Non-HE.'
-					);
-				}
-				this.setState({ mode: 'courses' });
-				break;
-			default:
-				this.setState({ mode: 'profile' });
-				break;
-		}
+		state.set(`school-show-mode-${this.state.id}`, mode);
 	}
 
 	deleteHandler() {
@@ -189,7 +235,7 @@ export default class Show extends Component {
 													Add Degree
 												</Link>
 												<Link
-													className="btn btn-sm btn-default text-left"
+													className="btn btn-sm btn-success text-left"
 													to={`/schools/${this.state.target.id}/non-he/add`}
 												>
 													Add Non-HE
@@ -219,6 +265,9 @@ export default class Show extends Component {
 														SchoolId={
 															this.state.target.id
 														}
+														history={
+															this.props.history
+														}
 													/>
 												)
 											)}
@@ -233,6 +282,10 @@ export default class Show extends Component {
 															<Course
 																key={index}
 																course={course}
+																school={
+																	this.state
+																		.target
+																}
 															/>
 														)
 													)

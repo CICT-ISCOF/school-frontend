@@ -36,7 +36,7 @@ export default class Header extends Component {
 						</a>
 						<a
 							href={`/schools/${target.id}/courses`}
-							className="btn btn-sm btn-default float-right"
+							className="btn btn-sm btn-dark float-right"
 							onClick={(e) => {
 								e.preventDefault();
 								show('courses');

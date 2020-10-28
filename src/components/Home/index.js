@@ -86,7 +86,7 @@ export default class Home extends Component {
 							</svg>
 						</div>
 					</div>
-					<Footer fixed={true} />
+					<Footer />
 				</div>
 			</div>
 		);

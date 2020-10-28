@@ -71,7 +71,9 @@ export default class Form extends Component {
 				.then((response) => response.data)
 				.then((degree) => {
 					const schools = state.get('schools') || [];
-					const parent = this.state.parent;
+					const parent = schools.find(
+						(school) => school.id === this.state.parent.id
+					);
 					if (this.state.mode === 'Add') {
 						parent.Degrees.push(degree);
 					} else {
@@ -83,6 +85,7 @@ export default class Form extends Component {
 					}
 
 					const index = schools.indexOf(parent);
+
 					schools.splice(index, 1, parent);
 
 					state.set('schools', schools);

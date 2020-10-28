@@ -1,49 +1,56 @@
 import React, { Component } from 'react';
-import toastr from 'toastr';
 import Axios from 'axios';
+import toastr from 'toastr';
 import state from '../../state';
 import Navbar from '../Navbar';
 import Footer from '../Footer';
-import Magic from '../Backgrounds/magic';
-import dayjs from 'dayjs';
+import Dark from '../Backgrounds/dark';
 
 export default class Form extends Component {
-	url = '/education';
+	url = '/courses';
 
 	constructor(props) {
 		super(props);
-
 		const fragments = window.location.pathname.split('/');
 
 		const {
 			match: { params },
 		} = this.props;
 
-		const id = Number(params.id);
+		const schoolId = Number(params.id);
+		const degreeId = Number(params.degreeId);
 
 		const schools = state.get('schools') || [];
-		const school = schools.find((school) => school.id === id);
+		const school = schools.find((school) => school.id === schoolId);
 
 		if (!school) {
 			this.props.history.goBack();
 			return;
 		}
 
+		const degree = school.Degrees.find((degree) => degree.id === degreeId);
+
+		if (!degree) {
+			this.props.history.goBack();
+			return;
+		}
+
 		this.state = {
-			mode: 'Add',
 			processing: false,
-			parent: school,
-			SchoolId: school.id,
-			type: 'Preschool',
+			mode: 'Add',
+			school,
+			degree,
+			DegreeId: degree.id,
+			title: '',
 			tuition: '',
-			date_of_examination: '',
-			description: '',
 		};
 
 		if (fragments.includes('edit')) {
-			const nonHEId = Number(params.nonHEId);
+			const courseId = Number(params.courseId);
 
-			const target = school.Education.find((item) => item.id === nonHEId);
+			const target = degree.Courses.find(
+				(course) => course.id === courseId
+			);
 
 			if (!target) {
 				this.props.history.goBack();
@@ -52,15 +59,11 @@ export default class Form extends Component {
 
 			this.state = {
 				processing: false,
-				parent: school,
-				SchoolId: school.id,
 				mode: 'Edit',
+				school,
+				degree,
+				DegreeId: degree.id,
 				...target,
-				date_of_examination: target.date_of_examination
-					? dayjs(target.date_of_examination).format(
-							'YYYY-MM-DD[T]HH:mm'
-					  )
-					: null,
 			};
 		}
 	}
@@ -71,35 +74,45 @@ export default class Form extends Component {
 
 	handleSubmit() {
 		return (e) => {
-			this.setState({ processing: true });
 			e.preventDefault();
+			this.setState({ processing: true });
 			this.request(this.state)
 				.then((response) => response.data)
-				.then((education) => {
+				.then((course) => {
 					const schools = state.get('schools') || [];
-					const parent = schools.find(
-						(school) =>
-							Number(school.id) === Number(this.state.parent.id)
+					const school = schools.find(
+						(school) => school.id === this.state.school.id
+					);
+
+					const degree = school.Degrees.find(
+						(degree) => degree.id === this.state.DegreeId
 					);
 
 					if (this.state.mode === 'Add') {
-						parent.Education.push(education);
+						degree.Courses.push(course);
 					} else {
-						const existing = parent.Education.find(
-							(item) => item.id === education.id
+						const existing = degree.Courses.find(
+							(item) => item.id === course.id
 						);
-						parent.Education.splice(
-							parent.Education.indexOf(existing),
+
+						degree.Courses.splice(
+							degree.Courses.indexOf(existing),
 							1,
-							education
+							course
 						);
 					}
 
-					schools.splice(schools.indexOf(parent), 1, parent);
+					school.Degrees.splice(
+						school.Degrees.indexOf(degree),
+						1,
+						degree
+					);
+
+					schools.splice(schools.indexOf(school), 1, school);
 
 					state.set('schools', schools);
 
-					toastr.success('Non-HE saved successfully.');
+					toastr.success('Course saved successfully.');
 				})
 				.catch((error) => {
 					if (error.response && error.response.status === 422) {
@@ -109,26 +122,21 @@ export default class Form extends Component {
 						return;
 					}
 					console.log(error);
-					toastr.error('Unable to save degree.');
+					toastr.error('Unable to save course.');
 				})
 				.finally(() => this.setState({ processing: false }));
 		};
 	}
 
-	request({ type, tuition, date_of_examination, description, SchoolId }) {
-		const data = {
-			type,
-			tuition,
-			description,
-			SchoolId,
-		};
-
-		if (date_of_examination.length > 0) {
-			data.date_of_examination = date_of_examination;
-		}
+	request({ title, tuition, description, DegreeId, id }) {
 		return this.state.mode === 'Add'
-			? Axios.post(this.url, data)
-			: Axios.put(`${this.url}/${this.state.id}`, data);
+			? Axios.post(this.url, { title, tuition, description, DegreeId })
+			: Axios.put(`${this.url}/${id}`, {
+					title,
+					tuition,
+					description,
+					DegreeId,
+			  });
 	}
 
 	render() {
@@ -136,7 +144,7 @@ export default class Form extends Component {
 			<div className="landing-page">
 				<Navbar transparent={false} />
 				<div className="section section-hero section-shaped pt-3">
-					<Magic />
+					<Dark />
 					<div className="page-header">
 						<div className="container shape-container d-flex align-items-center py-lg">
 							<div className="col px-0">
@@ -145,8 +153,11 @@ export default class Form extends Component {
 										<div className="rounded bg-white w-100 h-100 shadow">
 											<div className="container pt-3 px-5">
 												<h2>
-													{this.state.mode} Non-HE for{' '}
-													{this.state.parent.name}
+													{this.state.mode} Course for{' '}
+													{this.state.degree.type}
+												</h2>
+												<h2>
+													in {this.state.school.name}
 												</h2>
 												<button
 													className="btn btn-sm btn-warning"
@@ -163,12 +174,14 @@ export default class Form extends Component {
 													<div className="row">
 														<div className="col-sm-12 col-md-6 offset-md-3">
 															<div className="form-group">
-																<label htmlFor="type">
-																	Type:
+																<label htmlFor="title">
+																	Title:
 																</label>
-																<select
-																	id="type"
-																	name="type"
+																<input
+																	id="title"
+																	type="text"
+																	name="title"
+																	placeholder="Title"
 																	className={`form-control form-control-alternative ${
 																		this
 																			.state
@@ -185,29 +198,16 @@ export default class Form extends Component {
 																		e
 																	) =>
 																		this.set(
-																			'type',
+																			'title',
 																			e
 																		)
 																	}
 																	value={
 																		this
 																			.state
-																			.type
+																			.title
 																	}
-																>
-																	<option value="Preschool">
-																		Preschool
-																	</option>
-																	<option value="Elementary">
-																		Elementary
-																	</option>
-																	<option value="Secondary">
-																		Secondary
-																	</option>
-																	<option value="SHS">
-																		SHS
-																	</option>
-																</select>
+																/>
 															</div>
 														</div>
 														<div className="col-sm-12 col-md-6 offset-md-3">
@@ -244,46 +244,6 @@ export default class Form extends Component {
 																		this
 																			.state
 																			.tuition
-																	}
-																/>
-															</div>
-														</div>
-														<div className="col-sm-12 col-md-6 offset-md-3">
-															<div className="form-group">
-																<label htmlFor="date_of_examination">
-																	Date of
-																	Examination:
-																</label>
-																<input
-																	type="datetime-local"
-																	id="date_of_examination"
-																	name="date_of_examination"
-																	placeholder="Date of Examination"
-																	className={`form-control form-control-alternative ${
-																		this
-																			.state
-																			.processing
-																			? 'disabled'
-																			: ''
-																	}`}
-																	disabled={
-																		this
-																			.state
-																			.processing
-																	}
-																	onChange={(
-																		e
-																	) =>
-																		this.set(
-																			'date_of_examination',
-																			e
-																		)
-																	}
-																	value={
-																		this
-																			.state
-																			.date_of_examination ||
-																		''
 																	}
 																/>
 															</div>

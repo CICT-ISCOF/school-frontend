@@ -8,7 +8,9 @@ import SchoolList from './components/SchoolList';
 import SchoolShow from './components/SchoolList/show';
 import SchoolForm from './components/SchoolList/form';
 import DegreeForm from './components/Degree/form';
+import CourseForm from './components/Course/form';
 import NonHEForm from './components/NonHE/form';
+import MajorForm from './components/Major/form';
 import FZF from './components/404';
 import Axios from 'axios';
 import state from './state';
@@ -23,7 +25,38 @@ state.listen('token', (token) => {
 	Axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 });
 
+let handle;
+
+const start = () => {
+	handle = setInterval(() => {
+		Axios.get(`${process.env.REACT_APP_BACKEND_URL}/schools`)
+			.then((response) => state.set('schools', response.data))
+			.catch(() => {});
+	}, 5000);
+};
+
+const stop = () => {
+	clearInterval(handle);
+};
+
 export default class App extends Component {
+	handle = null;
+
+	componentDidMount() {
+		Axios.interceptors.response.use((response) => {
+			if (response.status === 401) {
+				state.remove('user').remove('token');
+				window.location.href = '/';
+			}
+			return response;
+		});
+		start();
+	}
+
+	componentWillUnmount() {
+		stop();
+	}
+
 	render() {
 		return (
 			<Router>
@@ -47,6 +80,27 @@ export default class App extends Component {
 						path="/schools/:id/degrees/:degreeId/edit"
 						component={DegreeForm}
 					/>
+
+					<Route
+						exact
+						path="/schools/:id/degrees/:degreeId/courses/add"
+						component={CourseForm}
+					/>
+					<Route
+						exact
+						path="/schools/:id/degrees/:degreeId/courses/:courseId/edit"
+						component={CourseForm}
+					/>
+					<Route
+						exact
+						path="/schools/:id/degrees/:degreeId/courses/:courseId/majors/add"
+						component={MajorForm}
+					/>
+					<Route
+						exact
+						path="/schools/:id/degrees/:degreeId/courses/:courseId/majors/:majorId/edit"
+						component={MajorForm}
+					/>
 					<Route
 						exact
 						path="/schools/:id/non-he/add"
@@ -57,8 +111,8 @@ export default class App extends Component {
 						path="/schools/:id/non-he/:nonHEId/edit"
 						component={NonHEForm}
 					/>
-					<Route path="/schools" component={SchoolList} />
-					<Route path="/register" component={Register} />
+					<Route path="/schools" exact component={SchoolList} />
+					<Route path="/register" exact component={Register} />
 					<Route component={FZF} />
 				</Switch>
 			</Router>
