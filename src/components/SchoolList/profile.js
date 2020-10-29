@@ -13,7 +13,9 @@ export default class Profile extends Component {
 	}
 
 	componentDidMount() {
-		this.key = state.listen('user', (user) => this.setState({ user }));
+		this.key = state.listen('user', (user) =>
+			this.setState({ user, logged: state.has('user') })
+		);
 	}
 
 	componentWillUnmount() {
@@ -34,7 +36,6 @@ export default class Profile extends Component {
 			mission,
 			vision,
 		} = this.props.profile;
-		const emitDelete = this.props.emitDelete;
 		return (
 			<div>
 				<div
@@ -66,61 +67,6 @@ export default class Profile extends Component {
 						<div className="col-lg-9">
 							<p>{curricular_program}</p>
 							<a href={website}>Visit Website</a>
-						</div>
-					</div>
-				</div>
-				<div
-					className="modal fade"
-					id="deleteModal"
-					tabIndex="-1"
-					role="dialog"
-					aria-labelledby="deleteModaltitle"
-					aria-hidden="true"
-				>
-					<div
-						className="modal-dialog modal-dialog-centered modal-lg"
-						role="document"
-					>
-						<div className="modal-content">
-							<div className="modal-header">
-								<h5
-									className="modal-title"
-									id="deleteModaltitle"
-								>
-									Delete {name}
-								</h5>
-								<button
-									type="button"
-									className="close"
-									data-dismiss="modal"
-									aria-label="Close"
-								>
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<div className="modal-body">
-								Are you sure you want to delete {name}?
-							</div>
-							<div className="modal-footer">
-								<button
-									type="button"
-									className="btn btn-danger btn-sm"
-									onClick={(e) => {
-										const $ = window.$;
-										emitDelete();
-										$('#deleteModal').modal('hide');
-									}}
-								>
-									Confirm
-								</button>
-								<button
-									type="button"
-									className="btn btn-secondary btn-sm"
-									data-dismiss="modal"
-								>
-									Close
-								</button>
-							</div>
 						</div>
 					</div>
 				</div>

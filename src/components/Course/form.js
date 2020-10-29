@@ -11,6 +11,10 @@ export default class Form extends Component {
 
 	constructor(props) {
 		super(props);
+		if (!state.has('user') && !state.has('token')) {
+			state.clear();
+			this.props.history.push('/login');
+		}
 		const fragments = window.location.pathname.split('/');
 
 		const {
@@ -126,14 +130,6 @@ export default class Form extends Component {
 				})
 				.finally(() => this.setState({ processing: false }));
 		};
-	}
-
-	componentDidMount() {
-		if (!state.has('user') && !state.has('token')) {
-			state.clear();
-			this.props.history.push('/login');
-			return;
-		}
 	}
 
 	request({ title, tuition, description, DegreeId, id }) {

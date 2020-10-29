@@ -4,7 +4,7 @@ export default class Header extends Component {
 	render() {
 		const { target, show, degrees, courses, nonHE } = this.props.header;
 		return (
-			<div className="row justify-content-center">
+			<div className="row justify-content-center mt-2">
 				<div className="col-lg-3 order-lg-2">
 					<div className="card-profile-image">
 						<a

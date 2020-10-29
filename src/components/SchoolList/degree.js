@@ -51,10 +51,10 @@ export default class Degree extends Component {
 			type,
 			description,
 			Courses,
-			OwnerId,
 			SchoolId,
 			id,
 		} = this.props.degree;
+		const OwnerId = this.props.OwnerId;
 		return (
 			<div className="col-sm-12 col-md-6 p-2">
 				<div className="bg-white rounded shadow p-3">

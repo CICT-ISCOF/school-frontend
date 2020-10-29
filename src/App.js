@@ -45,7 +45,7 @@ export default class App extends Component {
 
 	componentDidMount() {
 		Axios.interceptors.response.use((response) => {
-			if (response.status === 401 || response.status.403) {
+			if (response.status === 401 || response.status === 403) {
 				state.clear();
 				window.location.href = '/';
 			}

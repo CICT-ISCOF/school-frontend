@@ -19,6 +19,10 @@ export default class Form extends Component {
 
 	constructor(props) {
 		super(props);
+		if (!state.has('user') && !state.has('token')) {
+			state.clear();
+			this.props.history.push('/login');
+		}
 		const fragments = window.location.pathname.split('/');
 		this.state = {
 			processing: false,
@@ -72,14 +76,6 @@ export default class Form extends Component {
 			e.preventDefault();
 			this.setState({ [key]: e.target.value });
 		};
-	}
-
-	componentDidMount() {
-		if (!state.has('user') && !state.has('token')) {
-			state.clear();
-			this.props.history.push('/login');
-			return;
-		}
 	}
 
 	createHandlers() {

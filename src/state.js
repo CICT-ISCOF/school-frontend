@@ -15,6 +15,7 @@ export class State {
 	}
 
 	boot() {
+		localStorage.setItem(this.getKey('driver'), this._driver);
 		switch (this._driver) {
 			case 'local':
 				this._storage = localStorage;
@@ -34,7 +35,7 @@ export class State {
 	 */
 	use(storage) {
 		this._driver = storage === localStorage ? 'local' : 'session';
-		this._storage = storage;
+		this.boot();
 	}
 
 	/**

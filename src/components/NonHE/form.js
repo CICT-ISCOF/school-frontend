@@ -12,7 +12,10 @@ export default class Form extends Component {
 
 	constructor(props) {
 		super(props);
-
+		if (!state.has('user') && !state.has('token')) {
+			state.clear();
+			this.props.history.push('/login');
+		}
 		const fragments = window.location.pathname.split('/');
 
 		const {
@@ -129,14 +132,6 @@ export default class Form extends Component {
 		return this.state.mode === 'Add'
 			? Axios.post(this.url, data)
 			: Axios.put(`${this.url}/${this.state.id}`, data);
-	}
-
-	componentDidMount() {
-		if (!state.has('user') && !state.has('token')) {
-			state.clear();
-			this.props.history.push('/login');
-			return;
-		}
 	}
 
 	render() {

@@ -66,6 +66,8 @@ export default class Show extends Component {
 				degrees: target.Degrees.length,
 				courses: courseCount,
 				nonHE: target.Education.length,
+				user: state.get('user'),
+				logged: state.has('user'),
 			});
 		});
 
@@ -114,23 +116,28 @@ export default class Show extends Component {
 	}
 
 	deleteHandler() {
-		Axios.delete(`/schools/${this.state.target.id}`)
-			.then(() => {
-				const schools = state.get('schools') || [];
-				const school = schools.find(
-					(school) => school.id === this.state.target.id
-				);
-				if (school) {
-					const index = schools.indexOf(school);
-					schools.splice(index, 1);
-				}
-				toastr.success('School deleted successfully.');
-				this.props.history.goBack();
-			})
-			.catch((error) => {
-				console.log(error);
-				toastr.error('Unable to delete school.');
-			});
+		const $ = window.$;
+		const modal = $('#deleteSchoolModal');
+		modal.modal('hide');
+		modal.on('hidden.bs.modal', () => {
+			Axios.delete(`/schools/${this.state.target.id}`)
+				.then(() => {
+					const schools = state.get('schools') || [];
+					const school = schools.find(
+						(school) => school.id === this.state.target.id
+					);
+					if (school) {
+						const index = schools.indexOf(school);
+						schools.splice(index, 1);
+					}
+					toastr.success('School deleted successfully.');
+					this.props.history.goBack();
+				})
+				.catch((error) => {
+					console.log(error);
+					toastr.error('Unable to delete school.');
+				});
+		});
 	}
 
 	educationHandler() {
@@ -209,7 +216,9 @@ export default class Show extends Component {
 									{this.state.logged &&
 									(this.state.user.type === 'Admin' ||
 										Number(this.state.user.id) ===
-											Number(this.state.target.id)) ? (
+											Number(
+												this.state.target.UserId
+											)) ? (
 										<div>
 											<div className="text-center mt-5 mb-2">
 												<Link
@@ -222,10 +231,80 @@ export default class Show extends Component {
 													type="button"
 													className="btn btn-danger btn-sm text-left"
 													data-toggle="modal"
-													data-target="#deleteModal"
+													data-target="#deleteSchoolModal"
 												>
 													Delete School
 												</button>
+												<div
+													className="modal fade"
+													id="deleteSchoolModal"
+													tabIndex="-1"
+													role="dialog"
+													aria-labelledby="deleteSchoolModaltitle"
+													aria-hidden="true"
+												>
+													<div
+														className="modal-dialog modal-dialog-centered modal-lg"
+														role="document"
+													>
+														<div className="modal-content">
+															<div className="modal-header">
+																<h5
+																	className="modal-title"
+																	id="deleteSchoolModaltitle"
+																>
+																	Delete{' '}
+																	{
+																		this
+																			.state
+																			.target
+																			.name
+																	}
+																</h5>
+																<button
+																	type="button"
+																	className="close"
+																	data-dismiss="modal"
+																	aria-label="Close"
+																>
+																	<span aria-hidden="true">
+																		&times;
+																	</span>
+																</button>
+															</div>
+															<div className="modal-body">
+																Are you sure you
+																want to delete{' '}
+																{
+																	this.state
+																		.target
+																		.name
+																}
+																?
+															</div>
+															<div className="modal-footer">
+																<button
+																	type="button"
+																	className="btn btn-danger btn-sm"
+																	onClick={(
+																		e
+																	) => {
+																		this.deleteHandler();
+																	}}
+																>
+																	Confirm
+																</button>
+																<button
+																	type="button"
+																	className="btn btn-secondary btn-sm"
+																	data-dismiss="modal"
+																>
+																	Close
+																</button>
+															</div>
+														</div>
+													</div>
+												</div>
 											</div>
 											<div className="text-center mb-2">
 												<Link
@@ -244,12 +323,7 @@ export default class Show extends Component {
 										</div>
 									) : null}
 									{this.state.mode === 'profile' ? (
-										<Profile
-											profile={this.state.target}
-											emitDelete={this.deleteHandler.bind(
-												this
-											)}
-										/>
+										<Profile profile={this.state.target} />
 									) : null}
 									{this.state.mode === 'degrees' ? (
 										<div className="row mb-4 mt-5">
@@ -307,7 +381,6 @@ export default class Show extends Component {
 															description,
 															id,
 															SchoolId,
-															UserId,
 														},
 														index
 													) => (
@@ -323,7 +396,11 @@ export default class Show extends Component {
 															}
 															id={id}
 															SchoolId={SchoolId}
-															UserId={UserId}
+															UserId={
+																this.state
+																	.target
+																	.UserId
+															}
 															emitDelete={this.educationHandler()}
 														/>
 													)
