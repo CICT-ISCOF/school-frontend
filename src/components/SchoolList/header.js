@@ -17,7 +17,7 @@ export default class Header extends Component {
 							<img
 								src={target.ProfilePicture.uri}
 								alt={target.name + ' Profile'}
-								className="rounded-circle"
+								className="rounded-circle bg-white shadow border"
 							/>
 						</a>
 					</div>

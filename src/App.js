@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.scss';
 import Home from './components/Home';
 import Login from './components/Login';
+import User from './components/User';
 import Register from './components/Register';
 import SchoolList from './components/SchoolList';
 import SchoolShow from './components/SchoolList/show';
@@ -44,8 +45,8 @@ export default class App extends Component {
 
 	componentDidMount() {
 		Axios.interceptors.response.use((response) => {
-			if (response.status === 401) {
-				state.remove('user').remove('token');
+			if (response.status === 401 || response.status.403) {
+				state.clear();
 				window.location.href = '/';
 			}
 			return response;
@@ -63,6 +64,7 @@ export default class App extends Component {
 				<Switch>
 					<Route exact path="/" component={Home} />
 					<Route path="/login" component={Login} />
+					<Route path="/users" component={User} />
 					<Route exact path="/schools/add" component={SchoolForm} />
 					<Route
 						exact

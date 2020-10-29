@@ -143,6 +143,10 @@ export class State {
 		return this;
 	}
 
+	clear() {
+		return this.setAll({});
+	}
+
 	_dispatch(key, value) {
 		if (!(key in this._listeners)) {
 			return;

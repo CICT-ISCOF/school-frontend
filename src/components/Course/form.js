@@ -128,6 +128,14 @@ export default class Form extends Component {
 		};
 	}
 
+	componentDidMount() {
+		if (!state.has('user') && !state.has('token')) {
+			state.clear();
+			this.props.history.push('/login');
+			return;
+		}
+	}
+
 	request({ title, tuition, description, DegreeId, id }) {
 		return this.state.mode === 'Add'
 			? Axios.post(this.url, { title, tuition, description, DegreeId })

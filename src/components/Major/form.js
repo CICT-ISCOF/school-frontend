@@ -82,6 +82,14 @@ export default class Form extends Component {
 		this.setState({ [key]: e.target.value });
 	}
 
+	componentDidMount() {
+		if (!state.has('user') && !state.has('token')) {
+			state.clear();
+			this.props.history.push('/login');
+			return;
+		}
+	}
+
 	handleSubmit() {
 		return (e) => {
 			e.preventDefault();

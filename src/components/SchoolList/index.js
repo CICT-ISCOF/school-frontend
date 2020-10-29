@@ -9,6 +9,7 @@ import state from '../../state';
 import Violet from '../Backgrounds/violet';
 import ListHeader from './listheader';
 import Refresher from './refresher';
+import Pagination from '../pagination';
 
 export default class SchoolList extends Component {
 	url = '/schools';
@@ -16,10 +17,14 @@ export default class SchoolList extends Component {
 
 	constructor(props) {
 		super(props);
+
+		const query = new URLSearchParams(this.props.location.search);
+
 		this.state = {
 			schools: state.has('schools') ? state.get('schools') : [],
 			refreshing: false,
 			mode: 'all',
+			page: Number(query.get('page')) || 1,
 		};
 	}
 
@@ -73,22 +78,39 @@ export default class SchoolList extends Component {
 		this.setState({ mode });
 	}
 
+	paginate(page) {
+		this.setState({ page });
+	}
+
 	render() {
-		let list;
+		let items;
 		switch (this.state.mode) {
 			case 'all':
-				list = this.mapAll();
+				items = this.mapAll();
 				break;
 			case 'public':
-				list = this.mapCustom('Public');
+				items = this.mapCustom('Public');
 				break;
 			case 'private':
-				list = this.mapCustom('Private');
+				items = this.mapCustom('Private');
 				break;
 			default:
-				list = this.mapAll();
+				this.setState({ mode: 'all' });
+				items = this.mapAll();
 				break;
 		}
+
+		const page = this.state.page;
+		const list = [];
+		const limit = 10;
+		const offset = (page - 1) * limit;
+
+		for (let count = offset; count < offset + limit; count++) {
+			if (typeof items[count] !== 'undefined') {
+				list.push(items[count]);
+			}
+		}
+
 		return (
 			<div className="landing-page">
 				<Navbar />
@@ -100,7 +122,7 @@ export default class SchoolList extends Component {
 								<div className="row align-items-center justify-content-center">
 									<div className="col-sm-12">
 										<div className="rounded bg-white w-100 h-100 shadow">
-											<div className="container pt-3">
+											<div className="container py-3">
 												<Refresher
 													refresh={this.refresh.bind(
 														this
@@ -123,15 +145,30 @@ export default class SchoolList extends Component {
 													)}
 													history={this.props.history}
 												/>
-												<div className="row">
-													{list.length > 0 ? (
-														list
-													) : (
-														<div className="col-sm-12 text-center py-3">
-															<h2>No Results</h2>
-														</div>
+												<Pagination
+													url={
+														this.props.history
+															.location.pathname
+													}
+													current={page}
+													limit={limit}
+													total={items.length}
+													change={this.paginate.bind(
+														this
 													)}
-												</div>
+												>
+													<div className="row">
+														{list.length > 0 ? (
+															list
+														) : (
+															<div className="col-sm-12 text-center py-3">
+																<h2>
+																	No Results
+																</h2>
+															</div>
+														)}
+													</div>
+												</Pagination>
 											</div>
 										</div>
 									</div>

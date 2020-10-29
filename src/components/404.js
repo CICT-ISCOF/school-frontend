@@ -27,7 +27,7 @@ export default class FourZeroFour extends Component {
 								</div>
 							</div>
 						</div>
-						<div class="separator separator-bottom separator-skew zindex-100">
+						<div className="separator separator-bottom separator-skew zindex-100">
 							<svg
 								x="0"
 								y="0"
@@ -37,7 +37,7 @@ export default class FourZeroFour extends Component {
 								xmlns="http://www.w3.org/2000/svg"
 							>
 								<polygon
-									class="fill-white"
+									className="fill-white"
 									points="2560 0 2560 100 0 100"
 								></polygon>
 							</svg>

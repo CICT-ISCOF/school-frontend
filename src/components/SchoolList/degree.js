@@ -74,14 +74,12 @@ export default class Degree extends Component {
 									to={`/schools/${SchoolId}/degrees/${id}/edit`}
 									className="btn btn-sm btn-icon btn-warning rounded-circle mx-1 align-self-center"
 									style={{ height: '28px', width: '28px' }}
-									style={{ height: '30px', width: '30px' }}
 								>
 									<i className="fas fa-edit"></i>
 								</Link>
 								<a
 									href={`/schools/${SchoolId}/degrees/${id}/delete`}
 									style={{ height: '28px', width: '28px' }}
-									style={{ height: '30px', width: '30px' }}
 									type="button"
 									className="btn btn-sm btn-icon btn-danger rounded-circle mx-1 align-self-center"
 									data-toggle="modal"

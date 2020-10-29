@@ -131,6 +131,14 @@ export default class Form extends Component {
 			: Axios.put(`${this.url}/${this.state.id}`, data);
 	}
 
+	componentDidMount() {
+		if (!state.has('user') && !state.has('token')) {
+			state.clear();
+			this.props.history.push('/login');
+			return;
+		}
+	}
+
 	render() {
 		return (
 			<div className="landing-page">

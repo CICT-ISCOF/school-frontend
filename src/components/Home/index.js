@@ -52,7 +52,6 @@ export default class Home extends Component {
 												<Link
 													to="/schools/add"
 													className="btn btn-lg btn-github btn-icon mb-3 mb-sm-0"
-													target="_blank"
 												>
 													<span className="btn-inner--icon mb-1">
 														<Card />

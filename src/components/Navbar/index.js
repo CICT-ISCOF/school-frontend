@@ -29,7 +29,7 @@ export default class Navbar extends Component {
 	}
 
 	logout() {
-		state.remove('user').remove('token');
+		state.clear();
 		this.setState({ logged: false });
 		window.location.href = '/';
 	}

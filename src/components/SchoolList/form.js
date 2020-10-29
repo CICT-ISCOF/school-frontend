@@ -74,6 +74,14 @@ export default class Form extends Component {
 		};
 	}
 
+	componentDidMount() {
+		if (!state.has('user') && !state.has('token')) {
+			state.clear();
+			this.props.history.push('/login');
+			return;
+		}
+	}
+
 	createHandlers() {
 		return {
 			cover: (e) => {
