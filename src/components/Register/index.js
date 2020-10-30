@@ -39,6 +39,7 @@ export default class Register extends Component {
 
 	submit(e) {
 		e.preventDefault();
+		this.setState({ processing: true });
 		Axios.post(`/auth/register`, {
 			username: this.state.username,
 			password: this.state.password,
