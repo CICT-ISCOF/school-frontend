@@ -3,8 +3,65 @@ import { Link } from 'react-router-dom';
 import Dark from '../Backgrounds/dark';
 import FooterThanks from '../FooterThanks';
 import Navbar from '../Navbar';
+import Axios from 'axios';
+import toastr from 'toastr';
 
 export default class Register extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			processing: false,
+			username: '',
+			password: '',
+			agrees: false,
+		};
+	}
+
+	set(key, e) {
+		this.setState({ [key]: e.target.value });
+	}
+
+	getPasswordStrength() {
+		if (this.state.password.length > 9) {
+			return 'success';
+		}
+		if (this.state.password.length > 6) {
+			return 'warning';
+		}
+		return 'danger';
+	}
+
+	getPasswordStrengthLabel() {
+		return { success: 'Strong', warning: 'Medium', danger: 'Weak' }[
+			this.getPasswordStrength()
+		];
+	}
+
+	submit(e) {
+		e.preventDefault();
+		Axios.post(`/auth/register`, {
+			username: this.state.username,
+			password: this.state.password,
+			type: 'School Admin',
+		})
+			.then(() => {
+				toastr.success(
+					'Registered successfully. Go to the sign in page to log in.'
+				);
+			})
+			.catch((error) => {
+				if (error.response && error.response.status === 422) {
+					error.response.data.errors.forEach((error) => {
+						toastr.error(error.msg, error.param);
+					});
+					return;
+				}
+				console.log(error);
+				toastr.error('Unable to register.');
+			})
+			.finally(() => this.setState({ processing: false }));
+	}
+
 	render() {
 		return (
 			<div className="register-page">
@@ -24,6 +81,9 @@ export default class Register extends Component {
 												<a
 													href="/"
 													className="btn btn-neutral btn-icon mr-4"
+													onClick={(e) =>
+														e.preventDefault()
+													}
 												>
 													<span className="btn-inner--icon">
 														<i className="fab fa-facebook"></i>
@@ -35,6 +95,9 @@ export default class Register extends Component {
 												<a
 													href="/"
 													className="btn btn-neutral btn-icon"
+													onClick={(e) =>
+														e.preventDefault()
+													}
 												>
 													<span className="btn-inner--icon">
 														<i className="fab fa-google"></i>
@@ -51,7 +114,9 @@ export default class Register extends Component {
 													Or sign up with credentials
 												</small>
 											</div>
-											<form>
+											<form
+												onSubmit={(e) => this.submit(e)}
+											>
 												<div className="form-group">
 													<div className="input-group input-group-alternative mb-3">
 														<div className="input-group-prepend">
@@ -63,6 +128,16 @@ export default class Register extends Component {
 															className="form-control"
 															placeholder="Username"
 															type="text"
+															onChange={(e) =>
+																this.set(
+																	'username',
+																	e
+																)
+															}
+															value={
+																this.state
+																	.username
+															}
 														/>
 													</div>
 												</div>
@@ -77,16 +152,31 @@ export default class Register extends Component {
 															className="form-control"
 															placeholder="Password"
 															type="password"
+															onChange={(e) =>
+																this.set(
+																	'password',
+																	e
+																)
+															}
+															value={
+																this.state
+																	.password
+															}
 														/>
 													</div>
 												</div>
 												<div className="text-muted font-italic">
-													<small>
-														Password Strength:{' '}
-														<span className="text-success font-weight-700">
-															strong
-														</span>
-													</small>
+													{this.state.password
+														.length > 0 ? (
+														<small>
+															Password Strength:{' '}
+															<span
+																className={`text-${this.getPasswordStrength()} font-weight-700`}
+															>
+																{this.getPasswordStrengthLabel()}
+															</span>
+														</small>
+													) : null}
 												</div>
 												<div className="row my-4">
 													<div className="col-12">
@@ -95,6 +185,19 @@ export default class Register extends Component {
 																className="custom-control-input"
 																id="customCheckRegister"
 																type="checkbox"
+																onChange={(e) =>
+																	this.setState(
+																		{
+																			agrees: !this
+																				.state
+																				.agrees,
+																		}
+																	)
+																}
+																value={
+																	this.state
+																		.agrees
+																}
 															/>
 															<label
 																className="custom-control-label"
@@ -114,10 +217,23 @@ export default class Register extends Component {
 												</div>
 												<div className="text-center">
 													<button
-														type="button"
-														className="btn btn-primary mt-4"
+														type="submit"
+														className={`btn btn-primary mt-4 ${
+															this.state
+																.processing ||
+															!this.state.agrees
+																? 'disabled'
+																: ''
+														}`}
+														disabled={
+															this.state
+																.processing ||
+															!this.state.agrees
+														}
 													>
-														Create account
+														{this.state.processing
+															? 'Creating account'
+															: 'Create account'}
 													</button>
 												</div>
 											</form>
