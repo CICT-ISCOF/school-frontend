@@ -24,6 +24,7 @@ export default class SchoolList extends Component {
 			schools: state.has('schools') ? state.get('schools') : [],
 			refreshing: false,
 			mode: 'all',
+			list: 'all', // all | search
 			page: Number(query.get('page')) || 1,
 		};
 	}
@@ -31,9 +32,11 @@ export default class SchoolList extends Component {
 	componentDidMount() {
 		this.refresh();
 		this.key = state.listen('schools', (schools) => {
-			this.setState({
-				schools,
-			});
+			if (this.state.list === 'all') {
+				this.setState({
+					schools,
+				});
+			}
 		});
 	}
 
@@ -49,6 +52,7 @@ export default class SchoolList extends Component {
 				if (isSearch) {
 					return this.setState({ schools });
 				}
+				this.setState({ list: 'all' });
 				state.set('schools', schools);
 			})
 			.catch((error) => {
@@ -59,6 +63,7 @@ export default class SchoolList extends Component {
 	}
 
 	search(query) {
+		this.setState({ list: 'search' });
 		this.refresh('/search?name=' + query, true);
 	}
 
@@ -112,17 +117,17 @@ export default class SchoolList extends Component {
 		}
 
 		return (
-			<div className="landing-page">
+			<div className='landing-page'>
 				<Navbar />
-				<div className="section section-hero section-shaped">
+				<div className='section section-hero section-shaped'>
 					<Violet />
-					<div className="page-header">
-						<div className="container shape-container d-flex align-items-center py-lg">
-							<div className="col px-0">
-								<div className="row align-items-center justify-content-center">
-									<div className="col-sm-12">
-										<div className="rounded bg-white w-100 h-100 shadow">
-											<div className="container py-3">
+					<div className='page-header'>
+						<div className='container shape-container d-flex align-items-center py-lg'>
+							<div className='col px-0'>
+								<div className='row align-items-center justify-content-center'>
+									<div className='col-sm-12'>
+										<div className='rounded bg-white w-100 h-100 shadow'>
+											<div className='container py-3'>
 												<Refresher
 													refresh={this.refresh.bind(
 														this
@@ -131,7 +136,7 @@ export default class SchoolList extends Component {
 														this.state.refreshing
 													}
 												/>
-												<hr className="mt-0 mb-3" />
+												<hr className='mt-0 mb-3' />
 												<ListHeader
 													setMode={this.setMode.bind(
 														this
@@ -157,11 +162,11 @@ export default class SchoolList extends Component {
 														this
 													)}
 												>
-													<div className="row">
+													<div className='row'>
 														{list.length > 0 ? (
 															list
 														) : (
-															<div className="col-sm-12 text-center py-3">
+															<div className='col-sm-12 text-center py-3'>
 																<h2>
 																	No Results
 																</h2>
@@ -176,18 +181,18 @@ export default class SchoolList extends Component {
 							</div>
 						</div>
 					</div>
-					<div className="separator separator-bottom separator-skew zindex-100">
+					<div className='separator separator-bottom separator-skew zindex-100'>
 						<svg
-							x="0"
-							y="0"
-							viewBox="0 0 2560 100"
-							preserveAspectRatio="none"
-							version="1.1"
-							xmlns="http://www.w3.org/2000/svg"
+							x='0'
+							y='0'
+							viewBox='0 0 2560 100'
+							preserveAspectRatio='none'
+							version='1.1'
+							xmlns='http://www.w3.org/2000/svg'
 						>
 							<polygon
-								className="fill-white"
-								points="2560 0 2560 100 0 100"
+								className='fill-white'
+								points='2560 0 2560 100 0 100'
 							></polygon>
 						</svg>
 					</div>

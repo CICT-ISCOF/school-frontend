@@ -33,7 +33,7 @@ const start = () => {
 		Axios.get(`${process.env.REACT_APP_BACKEND_URL}/schools`)
 			.then((response) => state.set('schools', response.data))
 			.catch(() => {});
-	}, 5000);
+	}, 10000);
 };
 
 const stop = () => {
@@ -62,59 +62,59 @@ export default class App extends Component {
 		return (
 			<Router>
 				<Switch>
-					<Route exact path="/" component={Home} />
-					<Route path="/login" component={Login} />
-					<Route path="/users" component={User} />
-					<Route exact path="/schools/add" component={SchoolForm} />
+					<Route exact path='/' component={Home} />
+					<Route path='/login' component={Login} />
+					<Route path='/users' component={User} />
+					<Route exact path='/schools/add' component={SchoolForm} />
 					<Route
 						exact
-						path="/schools/:id/edit"
+						path='/schools/:id/edit'
 						component={SchoolForm}
 					/>
-					<Route exact path="/schools/:id" component={SchoolShow} />
+					<Route exact path='/schools/:id' component={SchoolShow} />
 					<Route
 						exact
-						path="/schools/:id/degrees/add"
+						path='/schools/:id/degrees/add'
 						component={DegreeForm}
 					/>
 					<Route
 						exact
-						path="/schools/:id/degrees/:degreeId/edit"
+						path='/schools/:id/degrees/:degreeId/edit'
 						component={DegreeForm}
 					/>
 
 					<Route
 						exact
-						path="/schools/:id/degrees/:degreeId/courses/add"
+						path='/schools/:id/degrees/:degreeId/courses/add'
 						component={CourseForm}
 					/>
 					<Route
 						exact
-						path="/schools/:id/degrees/:degreeId/courses/:courseId/edit"
+						path='/schools/:id/degrees/:degreeId/courses/:courseId/edit'
 						component={CourseForm}
 					/>
 					<Route
 						exact
-						path="/schools/:id/degrees/:degreeId/courses/:courseId/majors/add"
+						path='/schools/:id/degrees/:degreeId/courses/:courseId/majors/add'
 						component={MajorForm}
 					/>
 					<Route
 						exact
-						path="/schools/:id/degrees/:degreeId/courses/:courseId/majors/:majorId/edit"
+						path='/schools/:id/degrees/:degreeId/courses/:courseId/majors/:majorId/edit'
 						component={MajorForm}
 					/>
 					<Route
 						exact
-						path="/schools/:id/non-he/add"
+						path='/schools/:id/non-he/add'
 						component={NonHEForm}
 					/>
 					<Route
 						exact
-						path="/schools/:id/non-he/:nonHEId/edit"
+						path='/schools/:id/non-he/:nonHEId/edit'
 						component={NonHEForm}
 					/>
-					<Route path="/schools" exact component={SchoolList} />
-					<Route path="/register" exact component={Register} />
+					<Route path='/schools' exact component={SchoolList} />
+					<Route path='/register' exact component={Register} />
 					<Route component={FZF} />
 				</Switch>
 			</Router>
