@@ -33,7 +33,7 @@ const start = () => {
 		Axios.get(`${process.env.REACT_APP_BACKEND_URL}/schools`)
 			.then((response) => state.set('schools', response.data))
 			.catch(() => {});
-	}, 10000);
+	}, 30000);
 };
 
 const stop = () => {
