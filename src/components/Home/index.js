@@ -20,12 +20,9 @@ export default class Home extends Component {
 								<div className='col px-0'>
 									<div className='row align-items-center justify-content-center'>
 										<div className='col-lg-6 text-center'>
-											<img
-												src='./assets/img/brand/white.png'
-												style={{ width: '200px' }}
-												className='img-fluid'
-												alt='Logo'
-											/>
+											<h1 className='text-white'>
+												Search My School
+											</h1>
 											<p className='lead text-white'>
 												A place to find a school that
 												fits your needs.
