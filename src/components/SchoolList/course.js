@@ -62,91 +62,105 @@ export default class Course extends Component {
 		} = this.props.course;
 
 		const school = this.props.school;
+		const user = state.has('user') ? state.get('users') : null;
 
 		return (
-			<div className="col-sm-12 col-md-6 p-2">
-				<div className="bg-white rounded shadow p-3">
+			<div className='col-sm-12 col-md-6 p-2'>
+				<div className='bg-white rounded shadow p-3'>
 					<h4>{title}</h4>
-					<div className="d-flex mb-2">
-						<Link
-							to={`/schools/${school.id}/degrees/${DegreeId}/courses/${id}/majors/add`}
-							className="btn btn-sm btn-primary mx-1 align-self-center"
-						>
-							Add Major
-						</Link>
-						<Link
-							to={`/schools/${school.id}/degrees/${DegreeId}/courses/${id}/edit`}
-							className="btn btn-sm btn-icon btn-warning rounded-circle mx-1 align-self-center"
-							style={{ height: '30px', width: '30px' }}
-						>
-							<i className="fas fa-edit"></i>
-						</Link>
-						<a
-							style={{ height: '30px', width: '30px' }}
-							href={`/schools/${school.id}/degrees/${DegreeId}/courses/${id}/delete`}
-							type="button"
-							className="btn btn-sm btn-icon btn-danger rounded-circle mx-1 align-self-center"
-							data-toggle="modal"
-							data-target={`#deleteCourseModal${id}`}
-						>
-							<i className="fas fa-trash my-0 mx-0"></i>
-						</a>
-						<div
-							className="modal fade"
-							id={`deleteCourseModal${id}`}
-							tabIndex="-1"
-							role="dialog"
-							aria-labelledby={`deleteCourseModalLabel${id}`}
-							aria-hidden="true"
-						>
-							<div
-								className="modal-dialog modal-dialog-centered modal-lg"
-								role="document"
+					<div className='d-flex mb-2'>
+						{user &&
+						(user.type === 'Admin' || school.UserId === user.id) ? (
+							<Link
+								to={`/schools/${school.id}/degrees/${DegreeId}/courses/${id}/majors/add`}
+								className='btn btn-sm btn-primary mx-1 align-self-center'
 							>
-								<div className="modal-content">
-									<div className="modal-header">
-										<h5
-											className="modal-title"
-											id={`deleteCourseModalLabel${id}`}
+								Add Major
+							</Link>
+						) : null}
+						{user &&
+						(user.type === 'Admin' || school.UserId === user.id) ? (
+							<Link
+								to={`/schools/${school.id}/degrees/${DegreeId}/courses/${id}/edit`}
+								className='btn btn-sm btn-icon btn-warning rounded-circle mx-1 align-self-center'
+								style={{ height: '30px', width: '30px' }}
+							>
+								<i className='fas fa-edit'></i>
+							</Link>
+						) : null}
+						{user &&
+						(user.type === 'Admin' || school.UserId === user.id) ? (
+							<a
+								style={{ height: '30px', width: '30px' }}
+								href={`/schools/${school.id}/degrees/${DegreeId}/courses/${id}/delete`}
+								type='button'
+								className='btn btn-sm btn-icon btn-danger rounded-circle mx-1 align-self-center'
+								data-toggle='modal'
+								data-target={`#deleteCourseModal${id}`}
+							>
+								<i className='fas fa-trash my-0 mx-0'></i>
+							</a>
+						) : null}
+						{user &&
+						(user.type === 'Admin' || school.UserID === user.id) ? (
+							<div
+								className='modal fade'
+								id={`deleteCourseModal${id}`}
+								tabIndex='-1'
+								role='dialog'
+								aria-labelledby={`deleteCourseModalLabel${id}`}
+								aria-hidden='true'
+							>
+								<div
+									className='modal-dialog modal-dialog-centered modal-lg'
+									role='document'
+								>
+									<div className='modal-content'>
+										<div className='modal-header'>
+											<h5
+												className='modal-title'
+												id={`deleteCourseModalLabel${id}`}
+											>
+												Delete {title}
+											</h5>
+											<button
+												type='button'
+												className='close'
+												data-dismiss='modal'
+												aria-label='Close'
+											>
+												<span aria-hidden='true'>
+													&times;
+												</span>
+											</button>
+										</div>
+										<div
+											className='modal-body'
+											style={{ fontSize: '16px' }}
 										>
-											Delete {title}
-										</h5>
-										<button
-											type="button"
-											className="close"
-											data-dismiss="modal"
-											aria-label="Close"
-										>
-											<span aria-hidden="true">
-												&times;
-											</span>
-										</button>
-									</div>
-									<div
-										className="modal-body"
-										style={{ fontSize: '16px' }}
-									>
-										Are you sure you want to delete {title}?
-									</div>
-									<div className="modal-footer">
-										<button
-											type="button"
-											className="btn btn-danger btn-sm"
-											onClick={this.emitDelete()}
-										>
-											Confirm
-										</button>
-										<button
-											type="button"
-											className="btn btn-secondary btn-sm"
-											data-dismiss="modal"
-										>
-											Close
-										</button>
+											Are you sure you want to delete{' '}
+											{title}?
+										</div>
+										<div className='modal-footer'>
+											<button
+												type='button'
+												className='btn btn-danger btn-sm'
+												onClick={this.emitDelete()}
+											>
+												Confirm
+											</button>
+											<button
+												type='button'
+												className='btn btn-secondary btn-sm'
+												data-dismiss='modal'
+											>
+												Close
+											</button>
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
+						) : null}
 					</div>
 					<h6>
 						Tuition:
