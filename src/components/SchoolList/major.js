@@ -60,7 +60,7 @@ export default class Major extends Component {
 		const school = state
 			.get('schools')
 			.find((school) => school.id === SchoolId);
-		const user = state.has('user') ? state.get('users') : null;
+		const user = state.has('user') ? state.get('user') : null;
 		return (
 			<div className='mt-1 mb-2 p-3 shadow-sm rounded border'>
 				<h6 className='mb-0 d-flex'>

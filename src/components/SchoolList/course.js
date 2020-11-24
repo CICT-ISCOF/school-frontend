@@ -62,7 +62,7 @@ export default class Course extends Component {
 		} = this.props.course;
 
 		const school = this.props.school;
-		const user = state.has('user') ? state.get('users') : null;
+		const user = state.has('user') ? state.get('user') : null;
 
 		return (
 			<div className='col-sm-12 col-md-6 p-2'>
