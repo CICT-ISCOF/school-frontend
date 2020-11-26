@@ -26,6 +26,7 @@ export default class Rate extends Component {
 	}
 
 	async submit() {
+		this.setState({ processing: true });
 		try {
 			const response = await Axios.post(`/rating`, this.state);
 			console.log(response.data);
@@ -33,6 +34,8 @@ export default class Rate extends Component {
 		} catch (error) {
 			console.log(error);
 			toastr.error('Unable to save rating.');
+		} finally {
+			this.setState({ processing: false });
 		}
 	}
 
