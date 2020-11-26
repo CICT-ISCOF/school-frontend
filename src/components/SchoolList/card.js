@@ -37,7 +37,7 @@ export default class Card extends Component {
 			UserId,
 			// CoverPhoto,
 		} = this.props.school;
-		const rating = this.props.rating;
+		const rating = Number(this.props.rating ? this.props.rating : 0);
 		return (
 			<div className='col-sm-12 col-md-6 col-lg-6 p-3'>
 				<div className='card shadow-sm'>
@@ -75,7 +75,8 @@ export default class Card extends Component {
 							<Link to={`/schools/${id}`}>{name}</Link>
 						</h4>
 						<p className='card-text my-0'>
-							Rating: {Number(rating).toFixed(1)}
+							Rating:{' '}
+							{rating.isInteger() ? rating : rating.toFixed(1)}
 						</p>
 						<Link
 							className='btn btn-sm btn-secondary my-1'
