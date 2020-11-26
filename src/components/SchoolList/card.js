@@ -74,7 +74,9 @@ export default class Card extends Component {
 						<h4 className='card-title mt-2'>
 							<Link to={`/schools/${id}`}>{name}</Link>
 						</h4>
-						<p className='card-text my-0'>Rating: {rating}</p>
+						<p className='card-text my-0'>
+							Rating: {Number(rating).toFixed(1)}
+						</p>
 						<Link
 							className='btn btn-sm btn-secondary my-1'
 							to={`/schools/${id}/rate`}
