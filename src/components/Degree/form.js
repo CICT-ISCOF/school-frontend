@@ -123,23 +123,23 @@ export default class Form extends Component {
 
 	render() {
 		return (
-			<div className="landing-page">
+			<div className='landing-page'>
 				<Navbar transparent={false} />
-				<div className="section section-hero section-shaped pt-3">
+				<div className='section section-hero section-shaped pt-3'>
 					<Magic />
-					<div className="page-header">
-						<div className="container shape-container d-flex align-items-center py-lg">
-							<div className="col px-0">
-								<div className="row align-items-center justify-content-center">
-									<div className="col-sm-12">
-										<div className="rounded bg-white w-100 h-100 shadow">
-											<div className="container pt-3 px-5">
+					<div className='page-header'>
+						<div className='container shape-container d-flex align-items-center py-lg'>
+							<div className='col px-0'>
+								<div className='row align-items-center justify-content-center'>
+									<div className='col-sm-12'>
+										<div className='rounded bg-white w-100 h-100 shadow'>
+											<div className='container pt-3 px-5'>
 												<h2>
 													{this.state.mode} Degree for{' '}
 													{this.state.parent.name}
 												</h2>
 												<button
-													className="btn btn-sm btn-warning"
+													className='btn btn-sm btn-warning'
 													onClick={(e) => {
 														e.preventDefault();
 														this.props.history.goBack();
@@ -150,15 +150,15 @@ export default class Form extends Component {
 												<form
 													onSubmit={this.handleSubmit()}
 												>
-													<div className="row">
-														<div className="col-sm-12 col-md-6 offset-md-3">
-															<div className="form-group">
-																<label htmlFor="type">
+													<div className='row'>
+														<div className='col-sm-12 col-md-6 offset-md-3'>
+															<div className='form-group'>
+																<label htmlFor='type'>
 																	Type:
 																</label>
 																<select
-																	id="type"
-																	name="type"
+																	id='type'
+																	name='type'
 																	className={`form-control form-control-alternative ${
 																		this
 																			.state
@@ -185,28 +185,28 @@ export default class Form extends Component {
 																			.type
 																	}
 																>
-																	<option value="PhD">
+																	<option value='PhD'>
 																		PhD
 																	</option>
-																	<option value="Bachelor">
+																	<option value='Bachelor'>
 																		Bachelor
 																	</option>
-																	<option value="Master">
+																	<option value='Master'>
 																		Master
 																	</option>
 																</select>
 															</div>
 														</div>
-														<div className="col-sm-12 col-md-6 offset-md-3">
-															<div className="form-group">
-																<label htmlFor="name">
+														<div className='col-sm-12 col-md-6 offset-md-3'>
+															<div className='form-group'>
+																<label htmlFor='name'>
 																	Name:
 																</label>
 																<input
-																	id="name"
-																	type="text"
-																	name="name"
-																	placeholder="Name"
+																	id='name'
+																	type='text'
+																	name='name'
+																	placeholder='Name'
 																	className={`form-control form-control-alternative ${
 																		this
 																			.state
@@ -235,15 +235,15 @@ export default class Form extends Component {
 																/>
 															</div>
 														</div>
-														<div className="col-sm-12 col-md-6 offset-md-3">
-															<div className="form-group">
-																<label htmlFor="description">
+														<div className='col-sm-12 col-md-6 offset-md-3'>
+															<div className='form-group'>
+																<label htmlFor='description'>
 																	Description:
 																</label>
 																<textarea
-																	id="description"
-																	name="description"
-																	placeholder="Description"
+																	id='description'
+																	name='description'
+																	placeholder='Description'
 																	className={`form-control form-control-alternative ${
 																		this
 																			.state
@@ -272,9 +272,9 @@ export default class Form extends Component {
 																></textarea>
 															</div>
 														</div>
-														<div className="col-sm-12 col-md-6 offset-md-3 mb-5">
+														<div className='col-sm-12 col-md-6 offset-md-3 mb-5'>
 															<button
-																type="submit"
+																type='submit'
 																className={`btn btn-default btn-sm mt-2 mb-4 ${
 																	this.state
 																		.processing
@@ -288,7 +288,7 @@ export default class Form extends Component {
 															>
 																{this.state
 																	.processing ? (
-																	<i className="fas fa-circle-notch fa-spin"></i>
+																	<i className='fas fa-circle-notch fa-spin'></i>
 																) : (
 																	'Save'
 																)}

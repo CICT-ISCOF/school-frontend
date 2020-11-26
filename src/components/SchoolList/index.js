@@ -26,6 +26,7 @@ export default class SchoolList extends Component {
 			mode: 'all',
 			list: 'all', // all | search
 			page: Number(query.get('page')) || 1,
+			ratings: [],
 		};
 	}
 
@@ -52,6 +53,14 @@ export default class SchoolList extends Component {
 				if (isSearch) {
 					return this.setState({ schools });
 				}
+				const ratings = this.state.ratings;
+				schools.forEach(() => ratings.push(0));
+				schools.forEach(async (school, index) => {
+					const ratings = this.state.ratings;
+					const response = await Axios.get(`/rating?id=${school.id}`);
+					ratings[index] = response.data.total;
+					this.setState({ ratings });
+				});
 				this.setState({ list: 'all' });
 				state.set('schools', schools);
 			})
@@ -69,14 +78,24 @@ export default class SchoolList extends Component {
 
 	mapAll() {
 		return this.state.schools.map((school, index) => (
-			<Card key={index} school={school} />
+			<Card
+				key={index}
+				school={school}
+				rating={this.state.ratings[index]}
+			/>
 		));
 	}
 
 	mapCustom(key = 'Both') {
 		return this.state.schools
 			.filter((school) => school.type === key || school.type === 'Both')
-			.map((school, index) => <Card key={index} school={school} />);
+			.map((school, index) => (
+				<Card
+					key={index}
+					school={school}
+					rating={this.state.ratings[index]}
+				/>
+			));
 	}
 
 	setMode(mode) {

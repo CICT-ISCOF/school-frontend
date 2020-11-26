@@ -12,6 +12,7 @@ import DegreeForm from './components/Degree/form';
 import CourseForm from './components/Course/form';
 import NonHEForm from './components/NonHE/form';
 import MajorForm from './components/Major/form';
+import Rate from './components/Rate';
 import FZF from './components/404';
 import Axios from 'axios';
 import state from './state';
@@ -113,6 +114,7 @@ export default class App extends Component {
 						path='/schools/:id/non-he/:nonHEId/edit'
 						component={NonHEForm}
 					/>
+					<Route path='/schools/:id/rate' exact component={Rate} />
 					<Route path='/schools' exact component={SchoolList} />
 					<Route path='/register' exact component={Register} />
 					<Route component={FZF} />
