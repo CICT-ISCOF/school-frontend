@@ -76,7 +76,9 @@ export default class Card extends Component {
 						</h4>
 						<p className='card-text my-0'>
 							Rating:{' '}
-							{rating.isInteger() ? rating : rating.toFixed(1)}
+							{Number.isInteger(rating)
+								? rating
+								: Number(rating).toFixed(1)}
 						</p>
 						<Link
 							className='btn btn-sm btn-secondary my-1'
