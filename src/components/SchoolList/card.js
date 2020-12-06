@@ -1,3 +1,4 @@
+import Axios from 'axios';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import state from '../../state';
@@ -10,10 +11,14 @@ export default class Card extends Component {
 		this.state = {
 			user: state.get('user'),
 			logged: state.has('user'),
+			has_rated: true,
 		};
 	}
 
 	componentDidMount() {
+		Axios.get(`/locations/rating-status?SchoolId=${this.props.school.id}`)
+			.then((response) => response.data)
+			.then(({ has_rated }) => this.setState({ has_rated }));
 		this.key = state.listen('user', (user) => {
 			this.setState({ logged: state.has('user'), user });
 		});
@@ -80,12 +85,14 @@ export default class Card extends Component {
 								? rating
 								: Number(rating).toFixed(1)}
 						</p>
-						<Link
-							className='btn btn-sm btn-secondary my-1'
-							to={`/schools/${id}/rate`}
-						>
-							Rate
-						</Link>
+						{!this.state.has_rated ? (
+							<Link
+								className='btn btn-sm btn-secondary my-1'
+								to={`/schools/${id}/rate`}
+							>
+								Rate
+							</Link>
+						) : null}
 						<p className='card-text d-none d-sm-block my-0'>
 							Province of {' ' + province}
 						</p>
