@@ -27,7 +27,7 @@ export default class Form extends Component {
 		this.state = {
 			processing: false,
 			mode: fragments.includes('add') ? 'Add' : 'Edit',
-			region: '6',
+			region: 'NCR',
 			type: 'Public',
 			district: '6',
 			province: 'Iloilo',
@@ -150,22 +150,22 @@ export default class Form extends Component {
 
 	render() {
 		return (
-			<div className="landing-page">
+			<div className='landing-page'>
 				<Navbar transparent={false} />
-				<div className="section section-hero section-shaped pt-3">
+				<div className='section section-hero section-shaped pt-3'>
 					<Magic />
-					<div className="page-header">
-						<div className="container shape-container d-flex align-items-center py-lg">
-							<div className="col px-0">
-								<div className="row align-items-center justify-content-center">
-									<div className="col-sm-12">
-										<div className="rounded bg-white w-100 h-100 shadow">
-											<div className="container pt-3 px-5">
+					<div className='page-header'>
+						<div className='container shape-container d-flex align-items-center py-lg'>
+							<div className='col px-0'>
+								<div className='row align-items-center justify-content-center'>
+									<div className='col-sm-12'>
+										<div className='rounded bg-white w-100 h-100 shadow'>
+											<div className='container pt-3 px-5'>
 												<h2>
 													{this.state.mode} School
 												</h2>
 												<button
-													className="btn btn-sm btn-warning"
+													className='btn btn-sm btn-warning'
 													onClick={(e) => {
 														e.preventDefault();
 														this.props.history.goBack();
@@ -181,7 +181,7 @@ export default class Form extends Component {
 													onSubmit={this.handleSubmit()}
 												>
 													<input
-														type="file"
+														type='file'
 														ref={this.profile}
 														className={`d-none ${
 															this.state
@@ -195,14 +195,14 @@ export default class Form extends Component {
 																e
 															)
 														}
-														name="profile_picture"
+														name='profile_picture'
 														disabled={
 															this.state
 																.processing
 														}
 													/>
 													<input
-														type="file"
+														type='file'
 														ref={this.cover}
 														className={`d-none ${
 															this.state
@@ -216,7 +216,7 @@ export default class Form extends Component {
 																e
 															)
 														}
-														name="cover_photo"
+														name='cover_photo'
 														disabled={
 															this.state
 																.processing
@@ -262,7 +262,7 @@ export default class Form extends Component {
 														}
 													/>
 													<button
-														type="submit"
+														type='submit'
 														className={`btn btn-default btn-sm mt-2 mb-4 ${
 															this.state
 																.processing
@@ -276,7 +276,7 @@ export default class Form extends Component {
 													>
 														{this.state
 															.processing ? (
-															<i className="fas fa-circle-notch fa-spin"></i>
+															<i className='fas fa-circle-notch fa-spin'></i>
 														) : (
 															'Save'
 														)}
