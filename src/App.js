@@ -41,6 +41,24 @@ const stop = () => {
 	clearInterval(handle);
 };
 
+const makeToken = (length) => {
+	let result = '';
+	let characters =
+		'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	let charactersLength = characters.length;
+	for (var i = 0; i < length; i++) {
+		result += characters.charAt(
+			Math.floor(Math.random() * charactersLength)
+		);
+	}
+	return result;
+};
+
+if (!state.has('unique-token')) {
+	const token = makeToken(10);
+	state.set('unique-token', token);
+}
+
 export default class App extends Component {
 	handle = null;
 

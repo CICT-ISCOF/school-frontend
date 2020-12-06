@@ -22,6 +22,7 @@ export default class Rate extends Component {
 			rating: 1,
 			message: '',
 			processing: false,
+			ip_address: state.get('unique-token'),
 		};
 	}
 

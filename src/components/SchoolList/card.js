@@ -16,7 +16,11 @@ export default class Card extends Component {
 	}
 
 	componentDidMount() {
-		Axios.get(`/locations/rating-status?SchoolId=${this.props.school.id}`)
+		Axios.get(
+			`/locations/rating-status?SchoolId=${
+				this.props.school.id
+			}&ip_address=${state.get('unique-token')}`
+		)
 			.then((response) => response.data)
 			.then(({ has_rated }) => this.setState({ has_rated }));
 		this.key = state.listen('user', (user) => {
