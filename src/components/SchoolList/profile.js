@@ -35,7 +35,7 @@ export default class Profile extends Component {
 			curricular_program,
 			mission,
 			vision,
-			links,
+			Links,
 		} = this.props.profile;
 		return (
 			<div>
@@ -71,7 +71,7 @@ export default class Profile extends Component {
 						</div>
 					</div>
 					<ul className='list-group'>
-						{links.map((link, index) => (
+						{Links.map((link, index) => (
 							<li className='list-group-item' key={index}>
 								<a
 									href={link.url}

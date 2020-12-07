@@ -36,8 +36,10 @@ export default class FormOne extends Component {
 								'CARAGA',
 								'Cordillera Administrative Region (CAR)',
 								'Negros Island Region (NIR)',
-							].map((region) => (
-								<option value={region}>{region}</option>
+							].map((region, index) => (
+								<option value={region} key={index}>
+									{region}
+								</option>
 							))}
 						</select>
 					</div>

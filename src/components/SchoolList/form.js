@@ -45,7 +45,7 @@ export default class Form extends Component {
 				cover: 'https://via.placeholder.com/1000x300',
 				profile: 'https://via.placeholder.com/100',
 			},
-			links: [''],
+			Links: [''],
 		};
 		if (fragments.includes('edit')) {
 			const {
@@ -59,11 +59,13 @@ export default class Form extends Component {
 				this.props.history.push('/schools');
 				return;
 			}
+			const links = target.Links.map((link) => link.url);
 			this.state = {
 				mode: 'Edit',
 				...target,
 				profile_picture: null,
 				cover_photo: null,
+				Links: links.length > 0 ? links : [''],
 				urls: {
 					cover: target.CoverPhoto.uri,
 					profile: target.ProfilePicture.uri,
@@ -122,12 +124,14 @@ export default class Form extends Component {
 					? Axios.post(this.url, formData)
 					: Axios.put(`${this.url}/${this.state.id}`, formData));
 				await Axios.delete(`/links/truncate/${response.data.id}`);
-				await Promise.all(this.state.links.map((link) => {
-					return Axios.post(`/links`, {
-						url: link,
-						SchoolId: response.data.id,
-					});
-				}));
+				await Promise.all(
+					this.state.Links.map((link) => {
+						return Axios.post(`/links`, {
+							url: link,
+							SchoolId: response.data.id,
+						});
+					})
+				);
 				const school = (await Axios.get(`/schools/${response.data.id}`))
 					.data;
 				const schools = state.get('schools') || [];
@@ -236,7 +240,8 @@ export default class Form extends Component {
 															this
 														)}
 														processing={
-															this.processing
+															this.state
+																.processing
 														}
 													/>
 													<hr />
@@ -246,7 +251,8 @@ export default class Form extends Component {
 															this
 														)}
 														processing={
-															this.processing
+															this.state
+																.processing
 														}
 													/>
 													<hr />
@@ -256,7 +262,8 @@ export default class Form extends Component {
 															this
 														)}
 														processing={
-															this.processing
+															this.state
+																.processing
 														}
 													/>
 													<hr />
@@ -266,26 +273,32 @@ export default class Form extends Component {
 															this
 														)}
 														processing={
-															this.processing
+															this.state
+																.processing
 														}
 													/>
 													<div className='row'>
 														<div className='col-12'>
 															<button
-																className='btn btn-info btn-sm'
+																className={`btn btn-info btn-sm mb-2 ${
+																	this.state
+																		.processing
+																		? 'disabled'
+																		: ''
+																}`}
 																onClick={(
 																	e
 																) => {
 																	e.preventDefault();
-																	const links = this
+																	const Links = this
 																		.state
-																		.links;
-																	links.push(
+																		.Links;
+																	Links.push(
 																		''
 																	);
 																	this.setState(
 																		{
-																			links,
+																			Links,
 																		}
 																	);
 																}}
@@ -294,12 +307,16 @@ export default class Form extends Component {
 															</button>
 															<table className='table'>
 																<tbody>
-																	{this.state.links.map(
+																	{this.state.Links.map(
 																		(
 																			link,
 																			index
 																		) => (
-																			<tr>
+																			<tr
+																				key={
+																					index
+																				}
+																			>
 																				<td>
 																					<input
 																						type='text'
@@ -307,25 +324,36 @@ export default class Form extends Component {
 																							index +
 																							1
 																						}`}
-																						className='form-control form-control-sm'
+																						className={`form-control form-control-sm ${
+																							this
+																								.state
+																								.processing
+																								? 'disabled'
+																								: ''
+																						}`}
 																						value={
 																							link
+																						}
+																						disabled={
+																							this
+																								.state
+																								.processing
 																						}
 																						onChange={(
 																							e
 																						) => {
 																							e.preventDefault();
-																							const links = this
+																							const Links = this
 																								.state
-																								.links;
+																								.Links;
 
-																							links[
+																							Links[
 																								index
 																							] =
 																								e.target.value;
 																							this.setState(
 																								{
-																									links,
+																									Links,
 																								}
 																							);
 																						}}
@@ -333,21 +361,32 @@ export default class Form extends Component {
 																				</td>
 																				<td>
 																					<button
-																						className='btn btn-danger btn-sm'
+																						className={`btn btn-danger btn-sm ${
+																							this
+																								.state
+																								.processing
+																								? 'disabled'
+																								: ''
+																						}`}
+																						disabled={
+																							this
+																								.state
+																								.processing
+																						}
 																						onClick={(
 																							e
 																						) => {
 																							e.preventDefault();
-																							const links = this
+																							const Links = this
 																								.state
-																								.links;
-																							links.splice(
+																								.Links;
+																							Links.splice(
 																								index,
 																								1
 																							);
 																							this.setState(
 																								{
-																									links,
+																									Links,
 																								}
 																							);
 																						}}
