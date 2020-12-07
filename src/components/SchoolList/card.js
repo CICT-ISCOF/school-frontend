@@ -46,7 +46,8 @@ export default class Card extends Component {
 			UserId,
 			// CoverPhoto,
 		} = this.props.school;
-		const rating = Number(this.props.rating ? this.props.rating : 0);
+		// const rating = Number(this.props.rating ? this.props.rating : 0);
+		const rating = Number(this.props.school.ratings);
 		return (
 			<div className='col-sm-12 col-md-6 col-lg-6 p-3'>
 				<div className='card shadow-sm'>

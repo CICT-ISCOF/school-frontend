@@ -45,6 +45,7 @@ export default class Form extends Component {
 				cover: 'https://via.placeholder.com/1000x300',
 				profile: 'https://via.placeholder.com/100',
 			},
+			links: [''],
 		};
 		if (fragments.includes('edit')) {
 			const {
@@ -120,6 +121,13 @@ export default class Form extends Component {
 				const response = await (this.state.mode === 'Add'
 					? Axios.post(this.url, formData)
 					: Axios.put(`${this.url}/${this.state.id}`, formData));
+				await Axios.delete(`/links/truncate/${response.data.id}`);
+				await Promise.all(this.state.links.map((link) => {
+					return Axios.post(`/links`, {
+						url: link,
+						SchoolId: response.data.id,
+					});
+				}));
 				const school = (await Axios.get(`/schools/${response.data.id}`))
 					.data;
 				const schools = state.get('schools') || [];
@@ -261,6 +269,99 @@ export default class Form extends Component {
 															this.processing
 														}
 													/>
+													<div className='row'>
+														<div className='col-12'>
+															<button
+																className='btn btn-info btn-sm'
+																onClick={(
+																	e
+																) => {
+																	e.preventDefault();
+																	const links = this
+																		.state
+																		.links;
+																	links.push(
+																		''
+																	);
+																	this.setState(
+																		{
+																			links,
+																		}
+																	);
+																}}
+															>
+																Add Link
+															</button>
+															<table className='table'>
+																<tbody>
+																	{this.state.links.map(
+																		(
+																			link,
+																			index
+																		) => (
+																			<tr>
+																				<td>
+																					<input
+																						type='text'
+																						placeholder={`Link ${
+																							index +
+																							1
+																						}`}
+																						className='form-control form-control-sm'
+																						value={
+																							link
+																						}
+																						onChange={(
+																							e
+																						) => {
+																							e.preventDefault();
+																							const links = this
+																								.state
+																								.links;
+
+																							links[
+																								index
+																							] =
+																								e.target.value;
+																							this.setState(
+																								{
+																									links,
+																								}
+																							);
+																						}}
+																					/>
+																				</td>
+																				<td>
+																					<button
+																						className='btn btn-danger btn-sm'
+																						onClick={(
+																							e
+																						) => {
+																							e.preventDefault();
+																							const links = this
+																								.state
+																								.links;
+																							links.splice(
+																								index,
+																								1
+																							);
+																							this.setState(
+																								{
+																									links,
+																								}
+																							);
+																						}}
+																					>
+																						Remove
+																					</button>
+																				</td>
+																			</tr>
+																		)
+																	)}
+																</tbody>
+															</table>
+														</div>
+													</div>
 													<button
 														type='submit'
 														className={`btn btn-default btn-sm mt-2 mb-4 ${

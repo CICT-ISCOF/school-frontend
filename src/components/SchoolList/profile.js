@@ -35,6 +35,7 @@ export default class Profile extends Component {
 			curricular_program,
 			mission,
 			vision,
+			links,
 		} = this.props.profile;
 		return (
 			<div>
@@ -42,7 +43,7 @@ export default class Profile extends Component {
 					className={`text-center ${this.state.logged ? '' : 'mt-5'}`}
 				>
 					<h3>{name}</h3>
-					<div className="h6 font-weight-300">{address}</div>
+					<div className='h6 font-weight-300'>{address}</div>
 					<div>
 						Province of {province} - District {district}
 					</div>
@@ -53,7 +54,7 @@ export default class Profile extends Component {
 					<div>{phone}</div>
 					<div>{email}</div>
 					<a href={website}>{website}</a>
-					<div className="mt-4">
+					<div className='mt-4'>
 						<h5>Mission</h5>
 						<p>{mission}</p>
 					</div>
@@ -62,13 +63,22 @@ export default class Profile extends Component {
 						<p>{vision}</p>
 					</div>
 				</div>
-				<div className="mt-5 py-5 border-top text-center">
-					<div className="row justify-content-center">
-						<div className="col-lg-9">
+				<div className='mt-5 py-5 border-top text-center'>
+					<div className='row justify-content-center'>
+						<div className='col-lg-9'>
 							<p>{curricular_program}</p>
 							<a href={website}>Visit Website</a>
 						</div>
 					</div>
+					<ul className='list-group'>
+						{links.map((link, index) => (
+							<li className='list-group-item' key={index}>
+								<a href={link.url} target='_blank'>
+									{link.url}
+								</a>
+							</li>
+						))}
+					</ul>
 				</div>
 			</div>
 		);
