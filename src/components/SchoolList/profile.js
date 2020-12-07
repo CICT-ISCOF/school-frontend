@@ -73,7 +73,11 @@ export default class Profile extends Component {
 					<ul className='list-group'>
 						{links.map((link, index) => (
 							<li className='list-group-item' key={index}>
-								<a href={link.url} target='_blank'>
+								<a
+									href={link.url}
+									target='_blank'
+									rel='noopener noreferrer'
+								>
 									{link.url}
 								</a>
 							</li>
